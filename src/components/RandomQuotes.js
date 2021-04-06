@@ -1,29 +1,21 @@
 import React from 'react'
+import '../RandomQuotes.css';
 class RandomQuotes extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      apiResult: null,//1
+      apiResult: null,    //1
       author: '',
       text: '',
       isLoaded: false,
       bgColor: '#f99192',
       clickCount: 0,
     };
-    this.handleClick = this.handleClick.bind(this);//2
-    this.shareOnTwitter = this.shareOnTwitter.bind(this);
   }
 
-  handleClick() {
-    this.generateQuote();
-    this.changeColor();
-  }
-
-  componentDidMount() {
+componentDidMount() {//hien thi khi render xong
     fetch('https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json', {
-      headers: {
-        Accept: "application/json",
-      }
+      headers: {Accept: "application/json",}
     })
     .then(response => response.json())
     .then((responseData) => {
@@ -37,8 +29,12 @@ class RandomQuotes extends React.Component {
     })
     .catch(error => this.setState({ error }));
   }
+ handleClick() {
+    this.generateQuote();
+    this.changeColor();
+  }
 
-  generateQuote = () => {
+generateQuote = () => {
     const chosenQuote = [];
     const quotes = this.state.apiResult;
     let randomNumber = Math.floor((Math.random() * this.state.apiResult.length) + 1);
@@ -79,14 +75,7 @@ class RandomQuotes extends React.Component {
     }
   }
 
-  shareOnTwitter = () => {
-    // found on https://gist.github.com/McKinneyDigital/2884508#file-share-twitter-js
-    var url = "twitter.com";
-    let text = `${this.state.author} - ${this.state.text}`
-    window.open('http://twitter.com/share?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text), '', 'left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0');
-  }
-
-  render() {
+render() {
     return (
       <div id="main">
       <style>
@@ -101,8 +90,7 @@ class RandomQuotes extends React.Component {
         <div id="quote-box">
           <p id="text">{this.state.text}</p>
           <p id="author"> - {this.state.author}</p>
-          <a  id="tweet-quote" a href="http://twitter.com/intent/tweet" target="_blank"><button onClick={this.shareOnTwitter}>Twitt</button></a>
-          <button id="new-quote" onClick={this.handleClick}>New Quote</button>
+          <button id="new-quote" onClick={this.handleClick.bind(this)}>New Quote</button>
         </div>
       </div>
     );
